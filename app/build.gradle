@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "UNSPLASH_API_KEY", "\"" + UNSPLASH_API_KEY + "\""
     }
 
     buildTypes {
@@ -57,13 +59,14 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.1'
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:2.41"
-    kapt "com.google.dagger:hilt-compiler:2.41"
+    implementation "com.google.dagger:hilt-android:2.42"
+    kapt "com.google.dagger:hilt-compiler:2.42"
 
     // Network
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.moshi:moshi:1.12.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.moshi:moshi:1.13.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
 
     testImplementation 'junit:junit:4.13.2'
 
