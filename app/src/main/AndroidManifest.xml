@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="dev.punitd.unplashapp">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".UnsplashApp"
         android:allowBackup="true"
