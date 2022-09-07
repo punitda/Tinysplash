@@ -1,5 +1,6 @@
 package dev.punitd.unplashapp.di
 
+import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -39,6 +40,7 @@ object NetworkModule {
         val retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(NetworkResponseAdapterFactory())
             .baseUrl(BASE_URL)
             .build()
 
