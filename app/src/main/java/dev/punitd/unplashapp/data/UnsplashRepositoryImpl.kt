@@ -7,6 +7,11 @@ import dev.punitd.unplashapp.network.UnsplashErrorResponse
 import dev.punitd.unplashapp.util.toPageLinks
 import dev.punitd.unplashapp.util.toResult
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -25,12 +30,13 @@ class UnsplashRepositoryImpl @Inject constructor(
             unsplashApi.getPhotosByUrl(url).toPhotosResult()
         }
 
-    override suspend fun search(query: String, perPage: Int): Result<SearchResults> =
-        withContext(ioDispatcher) {
-            unsplashApi
-                .search(query = query, perPage = perPage)
-                .toSearchResult()
-        }
+    override suspend fun search(query: String, perPage: Int): Flow<Result<SearchResults>> = flow {
+        val result = unsplashApi
+            .search(query = query, perPage = perPage)
+            .toSearchResult()
+        emit(result)
+    }.flowOn(ioDispatcher)
+
 
     override suspend fun searchPhotosByUrl(url: String): Result<SearchResults> =
         withContext(ioDispatcher) {
