@@ -2,6 +2,7 @@ package dev.punitd.unplashapp.data
 
 import com.haroldadmin.cnradapter.NetworkResponse
 import dev.punitd.unplashapp.model.SearchResults
+import dev.punitd.unplashapp.model.SearchResultsResponse
 import dev.punitd.unplashapp.network.UnsplashErrorResponse
 import dev.punitd.unplashapp.model.UnsplashImage
 import retrofit2.http.GET
@@ -25,5 +26,11 @@ interface UnsplashApi {
     suspend fun search(
         @Query("query") query: String,
         @Query("per_page") perPage: Int,
-    ): NetworkResponse<SearchResults, UnsplashErrorResponse>
+    ): NetworkResponse<SearchResultsResponse, UnsplashErrorResponse>
+
+    @GET
+    suspend fun searchPhotosByUrl(
+        @Url url: String
+    ): NetworkResponse<SearchResultsResponse, UnsplashErrorResponse>
+
 }

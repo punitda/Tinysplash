@@ -9,4 +9,5 @@ interface UnsplashRepository {
     suspend fun getPhotos(page: Int, perPage: Int): Result<PhotosResults>
     suspend fun getPhotosByUrl(url: String): Result<PhotosResults>
     suspend fun search(query: String, perPage: Int): Result<SearchResults>
+    suspend fun searchPhotosByUrl(url: String): Result<SearchResults>
 }

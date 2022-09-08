@@ -27,13 +27,15 @@ class UnsplashRepositoryImpl @Inject constructor(
 
     override suspend fun search(query: String, perPage: Int): Result<SearchResults> =
         withContext(ioDispatcher) {
-            val result = unsplashApi
+            unsplashApi
                 .search(query = query, perPage = perPage)
-                .toResult()
-            when (result) {
-                is Error -> Error(throwable = result.throwable, message = result.message)
-                is Success -> Success(result.data)
-            }
+                .toSearchResult()
+        }
+
+    override suspend fun searchPhotosByUrl(url: String): Result<SearchResults> =
+        withContext(ioDispatcher) {
+            unsplashApi.searchPhotosByUrl(url)
+                .toSearchResult()
         }
 
     private fun NetworkResponse<List<UnsplashImage>, UnsplashErrorResponse>.toPhotosResult()
@@ -43,6 +45,19 @@ class UnsplashRepositoryImpl @Inject constructor(
             is Success -> Success(
                 PhotosResults(
                     images = result.data,
+                    pageLinks = this.toPageLinks()
+                )
+            )
+        }
+    }
+
+    private fun NetworkResponse<SearchResultsResponse, UnsplashErrorResponse>.toSearchResult()
+            : Result<SearchResults> {
+        return when (val result = this.toResult()) {
+            is Error -> Error(throwable = result.throwable, message = result.message)
+            is Success -> Success(
+                SearchResults(
+                    images = result.data.images,
                     pageLinks = this.toPageLinks()
                 )
             )
