@@ -3,7 +3,6 @@
 Note : This is WIP ⚠️
 
 ## Intro
----
 
 An Android app to demonstrate
 using [Jetpack Compose UI](https://developer.android.com/jetpack/compose)
@@ -24,7 +23,6 @@ Libraries used :
 
 
 ## Development Setup
----
 
 This App uses Unsplash apis. To run the project locally, you need to first setup developer account on Unsplash to obtain api key.
 
