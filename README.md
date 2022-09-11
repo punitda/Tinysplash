@@ -24,7 +24,7 @@ Libraries used :
 
 ## Development Setup
 
-This App uses Unsplash apis. To run the project locally, you need to first setup developer account on Unsplash to obtain api key.
+This App uses Unsplash apis. To run the project locally, you need to first [setup developer account](https://unsplash.com/documentation/#creating-a-developer-account) on Unsplash to obtain api key.
 
 Once you obtain the key, you can set them in project's root `gradle.properties` file.
 
