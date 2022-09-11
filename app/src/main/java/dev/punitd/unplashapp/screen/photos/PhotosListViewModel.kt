@@ -12,6 +12,7 @@ import dev.punitd.unplashapp.model.Error
 import dev.punitd.unplashapp.model.PageLinks
 import dev.punitd.unplashapp.model.Success
 import dev.punitd.unplashapp.model.UnsplashImage
+import dev.punitd.unplashapp.util.Constants.ITEM_PER_PAGE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -47,7 +48,8 @@ class PhotosListViewModel @Inject constructor(
                 when (event) {
                     InitialPageEvent -> {
                         isLoading = true
-                        when (val result = unsplashRepository.getPhotos(page = 1, perPage = 10)) {
+                        when (val result =
+                            unsplashRepository.getPhotos(page = 1, perPage = ITEM_PER_PAGE)) {
                             is Error -> {
                                 isLoading = false
                                 error = result.message
