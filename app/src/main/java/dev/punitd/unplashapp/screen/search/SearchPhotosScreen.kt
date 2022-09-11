@@ -9,8 +9,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.ramcosta.composedestinations.annotation.Destination
+import dev.punitd.unplashapp.MainNavGraph
 import dev.punitd.unplashapp.components.PhotosList
 
+@MainNavGraph
+@Destination(route = "search")
 @Composable
 fun SearchPhotosScreenRoute(modifier: Modifier = Modifier) {
     val viewModel: SearchPhotosViewModel = hiltViewModel()

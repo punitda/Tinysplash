@@ -14,11 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import dev.punitd.unplashapp.MainNavGraph
 import dev.punitd.unplashapp.components.PhotosList
 
-
+@MainNavGraph(start = true)
+@Destination(route = "photos_list")
 @Composable
-fun PhotosListScreenRoute(modifier: Modifier) {
+fun PhotosListScreenRoute(modifier: Modifier = Modifier) {
     val viewModel: PhotosListViewModel = hiltViewModel()
     val state by viewModel.stateFlow.collectAsState()
     PhotosListScreen(
