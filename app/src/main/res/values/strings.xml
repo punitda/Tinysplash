@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MoleculeUnplashApp</string>
+    <string name="home_screen">Home</string>
+    <string name="search_screen">Search</string>
 </resources>
