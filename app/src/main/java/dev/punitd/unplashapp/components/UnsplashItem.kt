@@ -1,7 +1,9 @@
 package dev.punitd.unplashapp.components
 
 import android.content.Intent
+import android.graphics.DashPathEffect
 import android.net.Uri
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,8 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -58,7 +66,9 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
             .padding(16.dp)
     ) {
         Image(
-            modifier = Modifier.fillMaxWidth().height(250.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Crop,
@@ -66,12 +76,13 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 16.dp),
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 modifier = Modifier
-                    .height(56.dp)
-                    .width(56.dp)
+                    .height(36.dp)
+                    .width(36.dp)
                     .clip(CircleShape),
                 painter = profileImagePainter,
                 contentDescription = null,
@@ -79,12 +90,11 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
             )
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                modifier= Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = 4.dp),
                 text = unsplashImage.user.username,
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary)
             )
-        }
-        Row(modifier = Modifier.padding(start = 20.dp, top = 8.dp, bottom = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Spacer(modifier = Modifier.weight(1f))
             Icon(imageVector = Icons.Filled.ThumbUp, contentDescription = null)
             Spacer(modifier = Modifier.size(8.dp))
             Text(
