@@ -29,7 +29,6 @@ class PhotosListViewModel @Inject constructor(
         present(events)
     }
 
-
     init {
         processEvent(InitialPageEvent)
     }
@@ -48,6 +47,7 @@ class PhotosListViewModel @Inject constructor(
                 when (event) {
                     InitialPageEvent -> {
                         isLoading = true
+                        error = null
                         when (val result =
                             unsplashRepository.getPhotos(page = 1, perPage = ITEM_PER_PAGE)) {
                             is Error -> {
@@ -66,6 +66,7 @@ class PhotosListViewModel @Inject constructor(
                         if (isPaginationLoading) return@collect
                         val nextPageUrl = pageLinks?.next ?: return@collect
                         isPaginationLoading = true
+                        paginationError = null
                         when (val result = unsplashRepository.getPhotosByUrl(nextPageUrl)) {
                             is Error -> {
                                 isPaginationLoading = false

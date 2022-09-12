@@ -91,6 +91,7 @@ class SearchPhotosViewModel @Inject constructor(
                             if (isPaginationLoading) return@collect
                             val nextPageUrl = pageLinks?.next ?: return@collect
                             isPaginationLoading = true
+                            paginationError = null
                             when (
                                 val result = unsplashRepository.searchPhotosByUrl(nextPageUrl)
                             ) {
