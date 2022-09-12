@@ -2,7 +2,7 @@ package dev.punitd.unplashapp.model
 
 import okhttp3.Headers
 
-class PageLinks(headers: Headers?) {
+class PageLinks(headers: Headers? = null) {
     /**
      * @return first
      */
