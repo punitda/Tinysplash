@@ -2,31 +2,34 @@ package dev.punitd.unplashapp.screen.photos
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.punitd.unplashapp.data.UnsplashRepository
+import dev.punitd.unplashapp.di.FrameClock
+import dev.punitd.unplashapp.di.MoleculeScope
 import dev.punitd.unplashapp.model.Error
 import dev.punitd.unplashapp.model.PageLinks
 import dev.punitd.unplashapp.model.Success
 import dev.punitd.unplashapp.model.UnsplashImage
 import dev.punitd.unplashapp.util.Constants.ITEM_PER_PAGE
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotosListViewModel @Inject constructor(
-    private val unsplashRepository: UnsplashRepository
+    private val unsplashRepository: UnsplashRepository,
+    @MoleculeScope private val scope: CoroutineScope,
+    @FrameClock private val clock: RecompositionClock,
 ) : ViewModel() {
-    private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-    private val events = MutableSharedFlow<Event>()
-    val stateFlow = scope.launchMolecule(clock = RecompositionClock.ContextClock) {
-        present(events)
+
+    private val events = Channel<Event>()
+    val stateFlow = scope.launchMolecule(clock = clock) {
+        present(events.receiveAsFlow())
     }
 
     init {
@@ -34,7 +37,7 @@ class PhotosListViewModel @Inject constructor(
     }
 
     @Composable
-    private fun present(events: Flow<Event>): PhotosListUIState {
+    fun present(events: Flow<Event>): PhotosListUIState {
         var isLoading by remember { mutableStateOf(false) }
         var error by remember { mutableStateOf<String?>(null) }
         var isPaginationLoading by remember { mutableStateOf(false) }
@@ -94,7 +97,7 @@ class PhotosListViewModel @Inject constructor(
 
     fun processEvent(event: Event) {
         scope.launch {
-            events.emit(event)
+            events.send(event)
         }
     }
 }
