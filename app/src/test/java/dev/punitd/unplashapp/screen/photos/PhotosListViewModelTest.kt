@@ -1,23 +1,28 @@
 package dev.punitd.unplashapp.screen.photos
 
 import app.cash.molecule.RecompositionClock
-import app.cash.turbine.test
+import app.cash.turbine.testIn
 import dev.punitd.unplashapp.data.fake.FakeUnsplashRepository
 import dev.punitd.unplashapp.model.images
+import dev.punitd.unplashapp.model.pageLinks
+import dev.punitd.unplashapp.util.CoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PhotosListViewModelTest {
 
+    @get:Rule
+    val coroutineRule = CoroutineRule()
+
     @Test
     fun successStateIfApiSucceeds() = runTest {
         val viewModel = PhotosListViewModel(
-            unsplashRepository = FakeUnsplashRepository(),
+            unsplashRepository = FakeUnsplashRepository(coroutineRule.testDispatcher),
             scope = this, // TestScope
             clock = RecompositionClock.Immediate,
         )
@@ -25,14 +30,18 @@ class PhotosListViewModelTest {
         // InitialPageEvent is send inside VM's init{} block by default
         // That's why we're not sending any events here.
 
-        viewModel.stateFlow.test {
-            assertEquals(PhotosListUIState(isLoading = false), awaitItem())
-            assertEquals(PhotosListUIState(isLoading = true), awaitItem())
-            runCurrent()
-            assertEquals(
-                PhotosListUIState(isLoading = false, error = null, images = images),
-                awaitItem()
-            )
-        }
+        val turbine = viewModel.stateFlow.testIn(this)
+        assertEquals(PhotosListUIState(isLoading = false), turbine.awaitItem())
+        assertEquals(PhotosListUIState(isLoading = true), turbine.awaitItem())
+        assertEquals(
+            PhotosListUIState(
+                isLoading = false,
+                error = null,
+                images = images,
+                pageLinks = pageLinks
+            ),
+            turbine.awaitItem()
+        )
+        turbine.cancel()
     }
 }
