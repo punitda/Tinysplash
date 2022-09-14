@@ -110,16 +110,7 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
 fun PreviewUnsplashItem() {
     MoleculeUnplashAppTheme {
         UnsplashItem(
-            unsplashImage = UnsplashImage(
-                id = "122",
-                urls = Urls(regularImage = "https://images.unsplash.com/photo-1657664042448-c955b411d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNDQyNTJ8MXwxfGFsbHwxfHx8fHx8Mnx8MTY2MjQ1OTAxNA&ixlib=rb-1.2.1&q=80&w=1080"),
-                likes = 20,
-                user = User(
-                    username = "oppofindx5pro",
-                    userLinks = UserLinks(html = "https://unsplash.com/@oppofindx5pro"),
-                    profileImage = ProfileImage(medium = "https://images.unsplash.com/profile-1657663575361-5e8d57088720image?ixlib=rb-1.2.1&crop=faces&fit=crop&w=64&h=64")
-                )
-            )
+            unsplashImage = image1
         )
     }
 }
