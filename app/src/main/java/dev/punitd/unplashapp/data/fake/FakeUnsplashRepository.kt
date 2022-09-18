@@ -11,8 +11,13 @@ import java.lang.RuntimeException
 
 class FakeUnsplashRepository(
     private val ioDispatcher: CoroutineDispatcher,
-    private val isSuccessful: Boolean = true,
+    var isSuccessful: Boolean = true,
 ) : UnsplashRepository {
+
+    companion object {
+        const val PHOTOS_API_ERROR = "Unable to get photos"
+        const val SEARCH_API_ERROR = "Unable to search photos"
+    }
 
     override suspend fun getPhotos(page: Int, perPage: Int): Result<PhotosResults> =
         withContext(ioDispatcher) {
@@ -20,8 +25,8 @@ class FakeUnsplashRepository(
                 Success(data = PhotosResults(images = images, pageLinks = pageLinks))
             } else {
                 Error(
-                    throwable = RuntimeException("Unable to get photos"),
-                    message = "unable to get photos"
+                    throwable = RuntimeException(PHOTOS_API_ERROR),
+                    message = PHOTOS_API_ERROR
                 )
             }
         }
@@ -29,11 +34,11 @@ class FakeUnsplashRepository(
     override suspend fun getPhotosByUrl(url: String): Result<PhotosResults> =
         withContext(ioDispatcher) {
             if (isSuccessful) {
-                Success(data = PhotosResults(images = images, pageLinks = pageLinks))
+                Success(data = PhotosResults(images = otherImages, pageLinks = otherPageLinks))
             } else {
                 Error(
-                    throwable = RuntimeException("unable to get photos"),
-                    message = "unable to get photos"
+                    throwable = RuntimeException(PHOTOS_API_ERROR),
+                    message = PHOTOS_API_ERROR
                 )
             }
         }
@@ -51,8 +56,8 @@ class FakeUnsplashRepository(
         } else {
             emit(
                 Error(
-                    throwable = RuntimeException("unable to search photos"),
-                    message = "unable to search photos"
+                    throwable = RuntimeException(SEARCH_API_ERROR),
+                    message = SEARCH_API_ERROR
                 )
             )
         }
@@ -61,11 +66,11 @@ class FakeUnsplashRepository(
     override suspend fun searchPhotosByUrl(url: String): Result<SearchResults> =
         withContext(ioDispatcher) {
             if (isSuccessful) {
-                Success(data = SearchResults(images = images, pageLinks = pageLinks))
+                Success(data = SearchResults(images = otherImages, pageLinks = otherPageLinks))
             } else {
                 Error(
-                    throwable = RuntimeException("unable to search photos"),
-                    message = "unable to search photos"
+                    throwable = RuntimeException(SEARCH_API_ERROR),
+                    message = SEARCH_API_ERROR
                 )
             }
         }
