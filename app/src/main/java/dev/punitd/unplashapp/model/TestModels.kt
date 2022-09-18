@@ -59,5 +59,13 @@ val pageLinks = PageLinks(
 )
 
 
+val otherPageLinks = PageLinks(
+    headers = Headers.Builder().add(
+        "link",
+        "<https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"first\", <https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"prev\", <https://api.unsplash.com/photos?page=13760&per_page=20&per_page=20>; rel=\"last\", <https://api.unsplash.com/photos?page=3&per_page=20&per_page=20>; rel=\"next\""
+    ).build()
+)
+
+
 
 
