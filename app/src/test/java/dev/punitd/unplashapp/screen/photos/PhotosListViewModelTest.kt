@@ -1,10 +1,9 @@
 package dev.punitd.unplashapp.screen.photos
 
 import app.cash.molecule.RecompositionClock
-import app.cash.turbine.testIn
+import app.cash.turbine.test
 import dev.punitd.unplashapp.data.fake.FakeUnsplashRepository
-import dev.punitd.unplashapp.model.images
-import dev.punitd.unplashapp.model.pageLinks
+import dev.punitd.unplashapp.model.*
 import dev.punitd.unplashapp.util.CoroutineRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -20,28 +19,148 @@ class PhotosListViewModelTest {
     val coroutineRule = CoroutineRule()
 
     @Test
+    fun initialState() = runTest {
+        val viewModel = PhotosListViewModel(
+            unsplashRepository = FakeUnsplashRepository(coroutineRule.testDispatcher),
+            scope = backgroundScope, // TestScope
+            clock = RecompositionClock.Immediate,
+        )
+        assertEquals(PhotosListUIState(isLoading = false), viewModel.stateFlow.value)
+    }
+
+    @Test
     fun successStateIfApiSucceeds() = runTest {
         val viewModel = PhotosListViewModel(
             unsplashRepository = FakeUnsplashRepository(coroutineRule.testDispatcher),
-            scope = this, // TestScope
+            scope = backgroundScope, // TestScope
             clock = RecompositionClock.Immediate,
         )
 
-        // InitialPageEvent is send inside VM's init{} block by default
-        // That's why we're not sending any events here.
+        viewModel.stateFlow.test {
+            assertEquals(
+                PhotosListUIState(isLoading = false),
+                awaitItem()
+            )
+            assertEquals(
+                PhotosListUIState(isLoading = true),
+                awaitItem()
+            )
+            assertEquals(
+                PhotosListUIState(
+                    isLoading = false,
+                    images = images,
+                    pageLinks = pageLinks
+                ), awaitItem()
+            )
+            cancel()
+        }
+    }
 
-        val turbine = viewModel.stateFlow.testIn(this)
-        assertEquals(PhotosListUIState(isLoading = false), turbine.awaitItem())
-        assertEquals(PhotosListUIState(isLoading = true), turbine.awaitItem())
-        assertEquals(
-            PhotosListUIState(
-                isLoading = false,
-                error = null,
-                images = images,
-                pageLinks = pageLinks
+    @Test
+    fun errorStateIfApiFails() = runTest {
+        val viewModel = PhotosListViewModel(
+            unsplashRepository = FakeUnsplashRepository(
+                coroutineRule.testDispatcher,
+                isSuccessful = false
             ),
-            turbine.awaitItem()
+            scope = backgroundScope, // TestScope
+            clock = RecompositionClock.Immediate,
         )
-        turbine.cancel()
+
+        viewModel.stateFlow.test {
+            assertEquals(PhotosListUIState(isLoading = false), awaitItem())
+            assertEquals(PhotosListUIState(isLoading = true), awaitItem())
+            assertEquals(
+                PhotosListUIState(
+                    isLoading = false,
+                    error = FakeUnsplashRepository.PHOTOS_API_ERROR,
+                ), awaitItem()
+            )
+            cancel()
+        }
+    }
+
+    @Test
+    fun paginateSuccessIfApiSucceeds() = runTest {
+        val viewModel = PhotosListViewModel(
+            unsplashRepository = FakeUnsplashRepository(coroutineRule.testDispatcher),
+            scope = backgroundScope, // TestScope
+            clock = RecompositionClock.Immediate,
+        )
+
+
+        viewModel.stateFlow.test {
+            assertEquals(PhotosListUIState(isLoading = false), awaitItem())
+            assertEquals(PhotosListUIState(isLoading = true), awaitItem())
+            assertEquals(
+                PhotosListUIState(
+                    isLoading = false,
+                    images = images,
+                    pageLinks = pageLinks
+                ), awaitItem()
+            )
+            viewModel.processEvent(PaginateEvent)
+            assertEquals(
+                PhotosListUIState(
+                    isPaginationLoading = true,
+                    images = images,
+                    pageLinks = pageLinks
+                ),
+                awaitItem()
+            )
+            assertEquals(
+                PhotosListUIState(
+                    isPaginationLoading = false,
+                    images = images + otherImages,
+                    pageLinks = otherPageLinks
+                ),
+                awaitItem()
+            )
+            cancel()
+        }
+    }
+
+    @Test
+    fun paginateErrorIfApiFails() = runTest {
+        val unsplashRepository = FakeUnsplashRepository(coroutineRule.testDispatcher)
+        val viewModel = PhotosListViewModel(
+            unsplashRepository = unsplashRepository,
+            scope = backgroundScope, // TestScope
+            clock = RecompositionClock.Immediate,
+        )
+
+
+        viewModel.stateFlow.test {
+            assertEquals(PhotosListUIState(isLoading = false), awaitItem())
+            assertEquals(PhotosListUIState(isLoading = true), awaitItem())
+            assertEquals(
+                PhotosListUIState(
+                    isLoading = false,
+                    images = images,
+                    pageLinks = pageLinks
+                ), awaitItem()
+            )
+
+            unsplashRepository.isSuccessful = false
+            viewModel.processEvent(PaginateEvent)
+            assertEquals(
+                PhotosListUIState(
+                    isPaginationLoading = true,
+                    images = images,
+                    pageLinks = pageLinks,
+                ),
+                awaitItem()
+            )
+            assertEquals(
+                PhotosListUIState(
+                    isPaginationLoading = false,
+                    images = images,
+                    pageLinks = pageLinks,
+                    paginationError = FakeUnsplashRepository.PHOTOS_API_ERROR,
+                ),
+                awaitItem()
+            )
+            cancel()
+        }
     }
 }
