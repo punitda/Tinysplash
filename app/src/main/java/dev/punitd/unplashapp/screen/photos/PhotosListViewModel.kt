@@ -51,16 +51,18 @@ class PhotosListViewModel @Inject constructor(
                     InitialPageEvent -> {
                         isLoading = true
                         error = null
-                        when (val result =
-                            unsplashRepository.getPhotos(page = 1, perPage = ITEM_PER_PAGE)) {
-                            is Error -> {
-                                isLoading = false
-                                error = result.message
-                            }
-                            is Success -> {
-                                isLoading = false
-                                images.addAll(result.data.images)
-                                pageLinks = result.data.pageLinks
+                        launch {
+                            when (val result =
+                                unsplashRepository.getPhotos(page = 1, perPage = ITEM_PER_PAGE)) {
+                                is Error -> {
+                                    isLoading = false
+                                    error = result.message
+                                }
+                                is Success -> {
+                                    isLoading = false
+                                    images.addAll(result.data.images)
+                                    pageLinks = result.data.pageLinks
+                                }
                             }
                         }
 
@@ -70,15 +72,17 @@ class PhotosListViewModel @Inject constructor(
                         val nextPageUrl = pageLinks?.next ?: return@collect
                         isPaginationLoading = true
                         paginationError = null
-                        when (val result = unsplashRepository.getPhotosByUrl(nextPageUrl)) {
-                            is Error -> {
-                                isPaginationLoading = false
-                                paginationError = result.message
-                            }
-                            is Success -> {
-                                isPaginationLoading = false
-                                images.addAll(result.data.images)
-                                pageLinks = result.data.pageLinks
+                        launch {
+                            when (val result = unsplashRepository.getPhotosByUrl(nextPageUrl)) {
+                                is Error -> {
+                                    isPaginationLoading = false
+                                    paginationError = result.message
+                                }
+                                is Success -> {
+                                    isPaginationLoading = false
+                                    images.addAll(result.data.images)
+                                    pageLinks = result.data.pageLinks
+                                }
                             }
                         }
                     }
@@ -88,7 +92,7 @@ class PhotosListViewModel @Inject constructor(
         return PhotosListUIState(
             isLoading = isLoading,
             error = error,
-            images = images,
+            images = images.toList(),
             pageLinks = pageLinks,
             isPaginationLoading = isPaginationLoading,
             paginationError = paginationError,
