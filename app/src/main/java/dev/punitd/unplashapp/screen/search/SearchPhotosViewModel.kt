@@ -2,12 +2,12 @@ package dev.punitd.unplashapp.screen.search
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import app.cash.molecule.AndroidUiDispatcher
 import app.cash.molecule.RecompositionClock
 import app.cash.molecule.launchMolecule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.punitd.unplashapp.data.UnsplashRepository
+import dev.punitd.unplashapp.di.FrameClock
+import dev.punitd.unplashapp.di.MoleculeScope
 import dev.punitd.unplashapp.model.Error
 import dev.punitd.unplashapp.model.PageLinks
 import dev.punitd.unplashapp.model.Success
@@ -22,16 +22,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchPhotosViewModel @Inject constructor(
-    private val unsplashRepository: UnsplashRepository
+    private val unsplashRepository: UnsplashRepository,
+    @MoleculeScope private val scope: CoroutineScope,
+    @FrameClock private val clock: RecompositionClock,
 ) : ViewModel() {
     companion object {
         const val SEARCH_TIMEOUT = 300L
     }
 
-    private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
     private val events = MutableSharedFlow<Event>()
-
-    val stateFlow = scope.launchMolecule(clock = RecompositionClock.ContextClock) {
+    val stateFlow = scope.launchMolecule(clock = clock) {
         present(events)
     }
 
@@ -106,20 +106,22 @@ class SearchPhotosViewModel @Inject constructor(
                                 }
                             }
 
+
                         }
                         is SearchEvent -> {
-                            // Handled above
+
                         }
                     }
                 }
         }
+
 
         return SearchUIState(
             isLoading = isSuggestionsLoading,
             isPaginationLoading = isPaginationLoading,
             error = error,
             paginationError = paginationError,
-            images = images,
+            images = images.toList(),
             pageLinks = pageLinks,
             currentQuery = currentQuery,
         )
