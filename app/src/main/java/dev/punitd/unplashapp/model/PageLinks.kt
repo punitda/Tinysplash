@@ -2,7 +2,7 @@ package dev.punitd.unplashapp.model
 
 import okhttp3.Headers
 
-class PageLinks(headers: Headers? = null) {
+data class PageLinks(val headers: Headers? = null) {
     /**
      * @return first
      */
@@ -68,6 +68,35 @@ class PageLinks(headers: Headers? = null) {
                     }
                 }
             }
+        }
+    }
+
+    override fun toString(): String {
+        return "PageLinks(headers=$headers)"
+    }
+
+    override fun hashCode(): Int {
+        val prev = (if (prev != null) prev.hashCode() else 0) * 31
+        val next = (if (next != null) next.hashCode() else 0) * 31
+        val first = (if (first != null) first.hashCode() else 0) * 31
+        val last = (if (last != null) last.hashCode() else 0)
+        return prev + next + first + last
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (this !== other) {
+            if (other is PageLinks) {
+                val prev = other.prev
+                val next = other.next
+                val first = other.first
+                val last = other.last
+                if (this.prev == prev && this.next == next && this.first == first && this.last == last) {
+                    return true
+                }
+            }
+            false
+        } else {
+            true
         }
     }
 }
