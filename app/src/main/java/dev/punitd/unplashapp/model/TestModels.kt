@@ -51,20 +51,18 @@ val images = listOf(image1, image2)
 val otherImages = listOf(image3, image4)
 
 
-val pageLinks = PageLinks(
-    headers = Headers.Builder().add(
-        "link",
-        "<https://api.unsplash.com/photos?page=13760&per_page=20>; rel=\"last\", <https://api.unsplash.com/photos?page=2&per_page=20>; rel=\"next\""
-    ).build()
-)
+val firstPageHeaders = Headers.Builder().add(
+    "link",
+    "<https://api.unsplash.com/photos?page=13760&per_page=20>; rel=\"last\", <https://api.unsplash.com/photos?page=2&per_page=20>; rel=\"next\""
+).build()
+val otherPageHeaders = Headers.Builder().add(
+    "link",
+    "<https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"first\", <https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"prev\", <https://api.unsplash.com/photos?page=13760&per_page=20&per_page=20>; rel=\"last\", <https://api.unsplash.com/photos?page=3&per_page=20&per_page=20>; rel=\"next\""
+).build()
 
+val pageLinks = PageLinks(headers = firstPageHeaders)
+val otherPageLinks = PageLinks(headers = otherPageHeaders)
 
-val otherPageLinks = PageLinks(
-    headers = Headers.Builder().add(
-        "link",
-        "<https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"first\", <https://api.unsplash.com/photos?page=1&per_page=20&per_page=20>; rel=\"prev\", <https://api.unsplash.com/photos?page=13760&per_page=20&per_page=20>; rel=\"last\", <https://api.unsplash.com/photos?page=3&per_page=20&per_page=20>; rel=\"next\""
-    ).build()
-)
 
 
 
