@@ -7,6 +7,7 @@ import dev.punitd.unplashapp.network.UnsplashErrorResponse
 import dev.punitd.unplashapp.util.toPageLinks
 import dev.punitd.unplashapp.util.toResult
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class UnsplashRepositoryImpl @Inject constructor(
     private val unsplashApi: UnsplashApi,
-    @IODispatcher private val ioDispatcher: CoroutineDispatcher
+    @IODispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : UnsplashRepository {
 
     override suspend fun getPhotos(page: Int, perPage: Int): Result<PhotosResults> =
