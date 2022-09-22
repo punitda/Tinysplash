@@ -1,5 +1,6 @@
 package dev.punitd.unplashapp.model
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import okhttp3.Headers
 
 val image1 = UnsplashImage(
@@ -63,7 +64,14 @@ val otherPageHeaders = Headers.Builder().add(
 val pageLinks = PageLinks(headers = firstPageHeaders)
 val otherPageLinks = PageLinks(headers = otherPageHeaders)
 
+val successNetworkResponse = NetworkResponse.Success(
+    body = images,
+    headers = firstPageHeaders,
+    code = 200,
+)
 
-
-
-
+val successSearchNetworkResponse = NetworkResponse.Success(
+    body = SearchResultsResponse(images = images),
+    headers = firstPageHeaders,
+    code = 200,
+)
