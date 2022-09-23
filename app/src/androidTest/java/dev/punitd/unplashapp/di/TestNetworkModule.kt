@@ -41,10 +41,10 @@ class TestNetworkModule {
     }
 
     @Provides
+    @Singleton
     fun provideMockServer(): MockWebServer {
         return MockWebServer()
     }
-
 
     /**
      * We need to jump through the hoops a bit
