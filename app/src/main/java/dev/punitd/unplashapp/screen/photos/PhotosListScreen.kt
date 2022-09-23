@@ -11,12 +11,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
+import dev.punitd.Semantics
+import dev.punitd.Tags
 import dev.punitd.unplashapp.MainNavGraph
+import dev.punitd.unplashapp.R
 import dev.punitd.unplashapp.components.PhotosList
 
 @MainNavGraph(start = true)
@@ -48,20 +55,24 @@ fun PhotosListScreen(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.testTag(Tags.ScreenLoader))
         }
     }
 
     if (state.error != null) {
         Column(
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.fillMaxHeight()
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxSize()
         ) {
             Text(
                 text = state.error,
                 textAlign = TextAlign.Center,
             )
-            Button(onClick = onRetryInitialPageClicked) {
+            Button(
+                onClick = onRetryInitialPageClicked,
+                modifier = Modifier.semantics { contentDescription = Semantics.RetryAction },
+            ) {
                 Text(text = "Retry")
             }
         }

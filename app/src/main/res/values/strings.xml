@@ -2,4 +2,7 @@
     <string name="app_name">MoleculeUnplashApp</string>
     <string name="home_screen">Home</string>
     <string name="search_screen">Search</string>
+
+    <!-- Semantics -->
+    <string name="ic_retry_action">Retry</string>
 </resources>
