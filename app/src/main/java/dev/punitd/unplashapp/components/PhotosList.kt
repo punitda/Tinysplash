@@ -39,7 +39,9 @@ fun PhotosList(
     ) {
         items(items.size) { index ->
             val unsplashImage = items[index]
-            if (index == items.lastIndex && pageLinks?.next != null && !isPaginationLoading) {
+            if (index == items.lastIndex && pageLinks?.next != null && !isPaginationLoading
+                && paginationError == null
+            ) {
                 loadNextPage()
             }
             UnsplashItem(unsplashImage)
@@ -71,6 +73,7 @@ fun PhotosList(
                         text = paginationError,
                         textAlign = TextAlign.Center,
                     )
+                    Spacer(modifier = Modifier.size(8.dp))
                     Button(
                         onClick = onRetryPaginationClicked,
                         modifier = Modifier.semantics {
