@@ -48,11 +48,18 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging true
+            }
+        }
     }
 
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += '/META-INF/LICENSE.md'
+            excludes += '/META-INF/LICENSE-notice.md'
         }
     }
 
@@ -94,13 +101,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
     testImplementation 'app.cash.turbine:turbine:0.10.0'
-    testImplementation "io.mockk:mockk:1.12.7"
+    testImplementation "io.mockk:mockk:1.12.8"
     testImplementation "com.squareup.okhttp3:mockwebserver:4.9.3"
 
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation "io.mockk:mockk-android:1.12.8"
+    androidTestImplementation "io.mockk:mockk:1.12.8"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 }
