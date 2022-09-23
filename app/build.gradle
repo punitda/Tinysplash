@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "dev.punitd.unplashapp.di.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary true
         }
@@ -110,6 +110,17 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation "io.mockk:mockk-android:1.12.8"
     androidTestImplementation "io.mockk:mockk:1.12.8"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.3"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.42"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:2.42"
+
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.squareup.okhttp3:okhttp:4.9.3"
+    }
 }
