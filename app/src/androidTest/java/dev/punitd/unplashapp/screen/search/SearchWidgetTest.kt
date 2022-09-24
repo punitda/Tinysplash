@@ -11,7 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 
 
-class SearchWidgetKtTest {
+class SearchWidgetTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
