@@ -44,7 +44,7 @@ fun SearchPhotosScreen(
     // Keeping this state locally because of clock sync issues when using TextField with
     // Molecule's scheduler
     // Refer issue : https://github.com/cashapp/molecule/issues/63
-    var searchText by remember { mutableStateOf("") }
+    var searchText by remember { mutableStateOf(state.currentQuery) }
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
