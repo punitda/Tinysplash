@@ -5,4 +5,7 @@ object Tags {
     const val ImagesList = "images_list"
     const val PaginationLoader = "pagination_loader"
     const val SearchSuggestionsLoader = "search_suggestions_loader"
+
+    const val PhotosTab = "photos_tab"
+    const val SearchTab = "search_tab"
 }
