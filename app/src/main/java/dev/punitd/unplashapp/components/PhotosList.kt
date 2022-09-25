@@ -34,7 +34,7 @@ fun PhotosList(
         modifier = modifier
             .fillMaxSize()
             .testTag(Tags.ImagesList),
-        contentPadding = PaddingValues(bottom = 12.dp),
+        contentPadding = PaddingValues(bottom = 80.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items.size) { index ->
@@ -67,7 +67,7 @@ fun PhotosList(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = modifier
                         .fillMaxWidth()
-                        .height(48.dp)
+                        .padding(vertical = 8.dp)
                 ) {
                     Text(
                         text = paginationError,
