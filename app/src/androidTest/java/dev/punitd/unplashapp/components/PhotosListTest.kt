@@ -13,7 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoilApi::class)
-class PhotosListKtTest {
+class PhotosListTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
