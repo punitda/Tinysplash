@@ -111,6 +111,9 @@ class SearchPhotosViewModel @Inject constructor(
                         is SearchEvent -> {
 
                         }
+                        ResetErrorEvent -> {
+                            error = null
+                        }
                     }
                 }
         }
