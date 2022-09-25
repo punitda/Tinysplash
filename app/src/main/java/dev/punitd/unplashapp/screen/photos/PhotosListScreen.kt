@@ -29,11 +29,10 @@ import dev.punitd.unplashapp.components.PhotosList
 @MainNavGraph(start = true)
 @Destination(route = "photos_list")
 @Composable
-fun PhotosListScreenRoute(modifier: Modifier = Modifier) {
+fun PhotosListScreenRoute() {
     val viewModel: PhotosListViewModel = hiltViewModel()
     val state by viewModel.stateFlow.collectAsState()
     PhotosListScreen(
-        modifier = modifier,
         state = state,
         onRetryInitialPageClicked = { viewModel.processEvent(InitialPageEvent) },
         onRetryPaginationClicked = { viewModel.processEvent(PaginateEvent) },
