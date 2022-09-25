@@ -83,12 +83,12 @@ class PhotosListScreenTest {
         // Sends success api response with link page header
         enqueueSuccessResponse(responseBody = photosSuccessfulResponse, headers = firstPageHeaders)
 
-
         // Wait for data to be fetched
         waitUntilVisibleWithTag(Tags.ImagesList)
         composeTestRule.onNodeWithTag(Tags.ImagesList)
+            .performScrollToIndex(images.lastIndex)
             .onChildren()
-            .assertCountEquals(images.size)
+            .assertCountEquals(images.size + 1)
 
         // Scroll till bottom of images list to check if pagination loader is shown
         composeTestRule.onNodeWithTag(Tags.ImagesList)
@@ -118,8 +118,9 @@ class PhotosListScreenTest {
         // Wait for data to be fetched
         waitUntilVisibleWithTag(Tags.ImagesList)
         composeTestRule.onNodeWithTag(Tags.ImagesList)
+            .performScrollToIndex(images.lastIndex)
             .onChildren()
-            .assertCountEquals(images.size)
+            .assertCountEquals(images.size + 1)
 
         // Scroll till bottom of images list to check if pagination loader is shown
         composeTestRule.onNodeWithTag(Tags.ImagesList)
