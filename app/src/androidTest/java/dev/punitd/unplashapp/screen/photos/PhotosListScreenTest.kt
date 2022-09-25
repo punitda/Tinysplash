@@ -41,30 +41,18 @@ class PhotosListScreenTest {
 
     @Test
     fun photosListFetchSuccess() {
-        // Loading indicator is displayed
-        composeTestRule.onNodeWithTag(Tags.ScreenLoader).assertIsDisplayed()
-
+        assertLoaderIsShown()
         // Sends success api response with no link page header(no next pages)
         enqueueSuccessResponse(responseBody = photosSuccessfulResponse)
 
-        // Wait for data to be fetched
-        waitUntilVisibleWithTag(Tags.ImagesList)
-        // Images are displayed
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .onChildren()
-            .assertCountEquals(images.size)
-
-        // Scroll till last element of images list
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .performScrollToIndex(images.lastIndex)
+        assertFirstPageImagesIsDisplayed(images.size)
         // Checks pagination loader is not shown when next page doesn't exist
         composeTestRule.onNodeWithTag(Tags.PaginationLoader).assertDoesNotExist()
     }
 
     @Test
     fun photosListFetchError() {
-        // Loading indicator is displayed
-        composeTestRule.onNodeWithTag(Tags.ScreenLoader).assertIsDisplayed()
+        assertLoaderIsShown()
 
         // Sends success api response with no link page header(no next pages)
         enqueueErrorResponse(responseBody = errorResponse)
@@ -77,27 +65,15 @@ class PhotosListScreenTest {
 
     @Test
     fun photosListPaginationSuccess() {
-        // Loading indicator is displayed
-        composeTestRule.onNodeWithTag(Tags.ScreenLoader).assertIsDisplayed()
+        assertLoaderIsShown()
 
         // Sends success api response with link page header
         enqueueSuccessResponse(responseBody = photosSuccessfulResponse, headers = firstPageHeaders)
-
-        // Wait for data to be fetched
-        waitUntilVisibleWithTag(Tags.ImagesList)
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .performScrollToIndex(images.lastIndex)
-            .onChildren()
-            .assertCountEquals(images.size + 1)
-
-        // Scroll till bottom of images list to check if pagination loader is shown
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .performScrollToNode(hasTestTag(Tags.PaginationLoader))
-        composeTestRule.onNodeWithTag(Tags.PaginationLoader).assertIsDisplayed()
+        assertFirstPageImagesIsDisplayed(images.size, paginationLoader = true)
+        assertPaginationLoaderIsDisplayed()
 
         // Sends success api response for next page with no link header(no next page)
         enqueueSuccessResponse(responseBody = photosSuccessfulResponse)
-
         // Wait till pagination loader is removed
         waitUntilInVisibleWithTag(Tags.PaginationLoader)
         // Images List should now show 2 pages worth of images
@@ -109,23 +85,12 @@ class PhotosListScreenTest {
 
     @Test
     fun photosListPaginationError() {
-        // Loading indicator is displayed
-        composeTestRule.onNodeWithTag(Tags.ScreenLoader).assertIsDisplayed()
+        assertLoaderIsShown()
 
         // Sends success api response with link page header
         enqueueSuccessResponse(responseBody = photosSuccessfulResponse, headers = firstPageHeaders)
-
-        // Wait for data to be fetched
-        waitUntilVisibleWithTag(Tags.ImagesList)
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .performScrollToIndex(images.lastIndex)
-            .onChildren()
-            .assertCountEquals(images.size + 1)
-
-        // Scroll till bottom of images list to check if pagination loader is shown
-        composeTestRule.onNodeWithTag(Tags.ImagesList)
-            .performScrollToNode(hasTestTag(Tags.PaginationLoader))
-        composeTestRule.onNodeWithTag(Tags.PaginationLoader).assertIsDisplayed()
+        assertFirstPageImagesIsDisplayed(images.size, paginationLoader = true)
+        assertPaginationLoaderIsDisplayed()
 
         // Sends error api response for next page to show pagination error
         enqueueErrorResponse(responseBody = errorResponse)
@@ -134,6 +99,26 @@ class PhotosListScreenTest {
         composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(Semantics.RetryAction).assertIsDisplayed()
     }
+
+    private fun assertLoaderIsShown() {
+        composeTestRule.onNodeWithTag(Tags.ScreenLoader).assertIsDisplayed()
+    }
+
+    private fun assertFirstPageImagesIsDisplayed(size: Int, paginationLoader: Boolean = false) {
+        val imagesListSize = if (paginationLoader) size + 1 else size
+        waitUntilVisibleWithTag(Tags.ImagesList)
+        composeTestRule.onNodeWithTag(Tags.ImagesList)
+            .performScrollToIndex(images.lastIndex)
+            .onChildren()
+            .assertCountEquals(imagesListSize)
+    }
+
+    private fun assertPaginationLoaderIsDisplayed() {
+        composeTestRule.onNodeWithTag(Tags.ImagesList)
+            .performScrollToNode(hasTestTag(Tags.PaginationLoader))
+        composeTestRule.onNodeWithTag(Tags.PaginationLoader).assertIsDisplayed()
+    }
+
 
     private fun waitUntilVisibleWithTag(tag: String) {
         composeTestRule.waitUntil {
